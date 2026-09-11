@@ -96,6 +96,10 @@ def main() -> None:
                 print("        Verify the current terms and set ai_use_status to 'permitted'")
                 print("        in the manifest before ingestion.")
         else:
+            # Create the target directory so the download has somewhere to land
+            # (git does not track empty directories, so a fresh clone lacks it).
+            if local.parent != Path("."):
+                local.parent.mkdir(parents=True, exist_ok=True)
             print(f"  not present locally. Download the PDF from the official page:")
             print(f"    {src.get('url')}")
             print(f"  and save it to: {local}")

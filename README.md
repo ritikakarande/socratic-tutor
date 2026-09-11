@@ -345,8 +345,56 @@ python scripts/ingest_openstax.py       # build the vector DB from permitted PDF
   and set `ai_use_status` to `permitted` in `data/source_manifest.json` before
   ingestion. Restricted books are skipped.
 
-Place downloaded OpenStax PDFs in `data/raw/openstax/` using the filenames in
-`data/source_manifest.json`.
+### Why no data is committed
+
+The corpus is 802 MB of PDFs plus a 169 MB vector store, against 0.4 MB of
+source. Two of the five books exceed GitHub's 100 MB per-file hard limit and
+would be rejected outright, and Git LFS free storage is 1 GB, which a single
+clone would exhaust. Large binaries and regenerable artefacts do not belong in
+a source repository, so the repo ships the scripts that rebuild them instead.
+
+**You do not need the textbooks to run this project.** `scripts/ingest.py`
+builds a self-contained seed corpus, so a fresh clone goes from
+`pip install -r requirements.txt` to a working tutor with citations in two
+commands.
+
+To add the OpenStax corpus, run `python scripts/download_openstax.py`. It
+prints the official page URL and the exact target filename for each book,
+creates the target directory, then validates whatever you place there.
+
+### Using your own documents
+
+The RAG pipeline is not tied to OpenStax. It ingests PDF, TXT and Markdown with
+arbitrary subjects and metadata:
+
+```python
+from app.config.settings import get_settings
+from app.rag.embeddings import build_embedder
+from app.rag.vector_store import build_vector_store
+from app.rag.ingestion import ingest_documents
+
+settings = get_settings()
+ingest_documents(
+    [{"path": "mydocs/astronomy.md", "subject": "astronomy",
+      "source": "My Astronomy Notes", "chapter": "Stellar Evolution"}],
+    embedder=build_embedder(settings),
+    store=build_vector_store(settings),
+    chunk_size=settings.rag_chunk_size,
+    overlap=settings.rag_chunk_overlap,
+)
+```
+
+Or add an entry to `data/source_manifest.json` and use `ingest_openstax.py`,
+which is really a generic manifest-driven ingester.
+
+One caveat if you move outside math and science: retrieval is routed by
+subject, and the router recognises math, physics, chemistry and biology by
+keyword. A new domain is ingested and retrievable straight away (and an
+explicit "using my textbook" request will retrieve it), but for automatic
+subject-filtered routing add your keywords to `_SUBJECT_KEYWORDS` in
+`app/agents/router.py` and to the subject allowlists in `router.py` and
+`app/agents/nodes.py`. The input guard's on-topic check in
+`app/guardrails/input_guard.py` is likewise tuned for math and science.
 
 ## Testing
 
