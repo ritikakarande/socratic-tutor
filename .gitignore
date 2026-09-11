@@ -1,0 +1,54 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+venv/
+.venv/
+env/
+
+# Data (downloaded / generated, never committed)
+data/raw/
+data/processed/
+data/chroma/
+*.pdf
+
+# But keep the tracked reference and authored files.
+# The custom Socratic and red-team datasets are hand-authored source (generated
+# reproducibly from app/evaluation/dataset_builders.py), not downloaded data,
+# so they are tracked. Downloaded benchmarks (gsm8k/math), PDFs and Chroma stay
+# ignored by the rules above.
+!data/source_manifest.json
+!data/README.md
+!data/raw/
+data/raw/*
+!data/raw/tutoring/
+data/raw/tutoring/*
+!data/raw/tutoring/*.json
+!data/raw/red_team/
+data/raw/red_team/*
+!data/raw/red_team/*.json
+
+# Logs and local outputs
+*.log
+logs/
+eval_report*.json
+eval_report*.md
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

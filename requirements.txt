@@ -1,0 +1,49 @@
+# Core web framework
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+pydantic==2.9.2
+pydantic-settings==2.5.2
+
+# Agent orchestration
+langgraph==0.2.28
+langchain==0.3.1
+langchain-core==0.3.6
+langchain-community==0.3.1
+
+# LLM provider.
+# Works with OpenAI or any OpenAI-compatible endpoint (Groq, OpenRouter,
+# Gemini compatibility API, Ollama) via OPENAI_BASE_URL.
+# Not pinned to 1.47: that release passes `proxies` to httpx, which httpx
+# 0.28+ removed, breaking every live client.
+openai>=1.55,<4
+
+# Mathematical reasoning
+sympy==1.13.3
+
+# RAG: vector store and embeddings
+# 1.x ships prebuilt wheels (Rust core), so no C++ toolchain is required.
+chromadb>=1.5.9,<2
+tiktoken==0.7.0
+
+# Document parsing for ingestion
+pymupdf==1.24.10
+
+# Dataset acquisition
+datasets==3.0.1
+huggingface-hub==0.25.1
+requests==2.32.3
+
+# Frontend
+streamlit==1.38.0
+
+# Evaluation
+deepeval==1.4.9
+ragas==0.1.21
+
+# Testing
+pytest==8.3.3
+pytest-asyncio==0.24.0
+
+# Utilities
+python-dotenv==1.0.1
+tenacity==8.5.0

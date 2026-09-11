@@ -1,0 +1,66 @@
+# Local orchestration for the Socratic Tutor.
+#
+# Services:
+#   api       - FastAPI backend (LangGraph tutor)
+#   frontend  - Streamlit UI, talks to the API
+#
+# The vector database runs in-process (persistent ChromaDB on a shared volume)
+# by default. A `chroma` server service and a `qdrant` service are included but
+# commented out, showing how the stack scales to a standalone vector database
+# without changing application code beyond the VectorStore implementation.
+
+services:
+  api:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - CHROMA_PERSIST_DIR=/data/chroma
+    volumes:
+      - ./data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build: .
+    command: streamlit run frontend/streamlit_app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      - BACKEND_URL=http://api:8000
+    depends_on:
+      - api
+    volumes:
+      - ./data:/data
+
+  # ----------------------------------------------------------------------- #
+  # Future scaling: a standalone vector database.
+  # To use Chroma in server mode, run this service and implement an
+  # HttpClient-based branch in app/rag/vector_store.py.
+  # ----------------------------------------------------------------------- #
+  # chroma:
+  #   image: chromadb/chroma:0.5.5
+  #   ports:
+  #     - "8001:8000"
+  #   volumes:
+  #     - chroma_data:/chroma/chroma
+
+  # To use Qdrant, add a QdrantVectorStore(VectorStore) and set VECTOR_DB=qdrant.
+  # qdrant:
+  #   image: qdrant/qdrant:latest
+  #   ports:
+  #     - "6333:6333"
+  #   volumes:
+  #     - qdrant_data:/qdrant/storage
+
+# volumes:
+#   chroma_data:
+#   qdrant_data:

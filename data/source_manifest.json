@@ -1,0 +1,127 @@
+{
+  "description": "Manifest of external data sources. AI-use status must be verified before ingestion. This file is tracked in git; the referenced downloads are not.",
+  "last_reviewed": "2026-09-11",
+  "benchmarks": [
+    {
+      "name": "GSM8K",
+      "hf_dataset": "openai/gsm8k",
+      "config": "main",
+      "type": "benchmark",
+      "subject": "math",
+      "license": "MIT",
+      "usage": "evaluation_only",
+      "url": "https://huggingface.co/datasets/openai/gsm8k",
+      "local_path": "data/raw/gsm8k/",
+      "notes": "Grade-school math word problems. Used to measure correctness and tool accuracy."
+    },
+    {
+      "name": "Hendrycks MATH",
+      "hf_dataset": "EleutherAI/hendrycks_math",
+      "config": "all",
+      "type": "benchmark",
+      "subject": "math",
+      "license": "MIT",
+      "usage": "evaluation_only",
+      "url": "https://huggingface.co/datasets/EleutherAI/hendrycks_math",
+      "local_path": "data/raw/math/",
+      "notes": "Competition math across seven categories. Original data is not modified."
+    }
+  ],
+  "tutoring": [
+    {
+      "name": "Khan Academy Tutoring Accuracy Dataset",
+      "type": "tutoring_reference",
+      "subject": "mixed",
+      "url": "https://github.com/Khan/tutoring-accuracy-dataset",
+      "license": "verify_before_use",
+      "ai_use_status": "verify_before_ingestion",
+      "local_path": "data/raw/tutoring/khan/",
+      "notes": "Redistribution NOT assumed. scripts/download_datasets.py prints manual instructions and does not auto-download unless the license is confirmed to permit it. Review the repository LICENSE before use."
+    }
+  ],
+  "rag_sources": [
+    {
+      "name": "College Algebra 2e",
+      "publisher": "OpenStax",
+      "url": "https://openstax.org/books/college-algebra-2e/",
+      "type": "textbook",
+      "subject": "math",
+      "license": "CC BY 4.0 (verify current terms)",
+      "ai_use_status": "permitted",
+      "local_path": "data/raw/openstax/college_algebra_2e.pdf",
+      "ai_use_reviewed": "2026-09-11",
+      "ai_use_note": "Reviewed by project owner; CC BY attribution retained in chunk metadata."
+    },
+    {
+      "name": "Algebra 1",
+      "publisher": "OpenStax",
+      "url": "https://openstax.org/books/algebra-1/",
+      "type": "textbook",
+      "subject": "math",
+      "license": "CC BY 4.0 (verify current terms)",
+      "ai_use_status": "permitted",
+      "local_path": "data/raw/openstax/algebra-1-high-school-math.pdf",
+      "ai_use_reviewed": "2026-09-11",
+      "ai_use_note": "Reviewed by project owner; CC BY attribution retained in chunk metadata."
+    },
+    {
+      "name": "University Physics Volume 1",
+      "publisher": "OpenStax",
+      "url": "https://openstax.org/books/university-physics-volume-1/",
+      "type": "textbook",
+      "subject": "physics",
+      "license": "CC BY 4.0 (verify current terms)",
+      "ai_use_status": "permitted",
+      "local_path": "data/raw/openstax/university_physics_volume_1.pdf",
+      "ai_use_reviewed": "2026-09-11",
+      "ai_use_note": "Reviewed by project owner; CC BY attribution retained in chunk metadata."
+    },
+    {
+      "name": "Chemistry 2e",
+      "publisher": "OpenStax",
+      "url": "https://openstax.org/books/chemistry-2e/",
+      "type": "textbook",
+      "subject": "chemistry",
+      "license": "CC BY 4.0 (verify current terms)",
+      "ai_use_status": "permitted",
+      "local_path": "data/raw/openstax/chemistry_2e.pdf",
+      "ai_use_reviewed": "2026-09-11",
+      "ai_use_note": "Reviewed by project owner; CC BY attribution retained in chunk metadata."
+    },
+    {
+      "name": "Biology 2e",
+      "publisher": "OpenStax",
+      "url": "https://openstax.org/books/biology-2e/",
+      "type": "textbook",
+      "subject": "biology",
+      "license": "CC BY 4.0 (verify current terms)",
+      "ai_use_status": "permitted",
+      "local_path": "data/raw/openstax/biology_2e.pdf",
+      "ai_use_reviewed": "2026-09-11",
+      "ai_use_note": "Reviewed by project owner; CC BY attribution retained in chunk metadata."
+    }
+  ],
+  "custom": [
+    {
+      "name": "Socratic pedagogy tests",
+      "type": "custom_evaluation",
+      "generated_by": "app/evaluation/dataset_builders.py:build_socratic_dataset",
+      "local_path": "data/raw/tutoring/socratic_tests.json",
+      "usage": "pedagogy_evaluation"
+    },
+    {
+      "name": "Red-team safety tests",
+      "type": "custom_evaluation",
+      "generated_by": "app/evaluation/dataset_builders.py:build_safety_dataset",
+      "local_path": "data/raw/red_team/safety_tests.json",
+      "usage": "safety_evaluation"
+    },
+    {
+      "name": "RAG injection tests",
+      "type": "custom_evaluation",
+      "generated_by": "app/evaluation/dataset_builders.py:build_rag_injection_dataset",
+      "local_path": "data/raw/red_team/rag_injection_tests.json",
+      "usage": "safety_evaluation"
+    }
+  ]
+}
